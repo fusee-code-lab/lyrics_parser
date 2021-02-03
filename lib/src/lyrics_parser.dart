@@ -248,9 +248,9 @@ class LyricsParser {
           continue;
         }
         if (inMillsecond) {
-          secondStr.write(itertor.current);
-        } else {
           millsecondStr.write(itertor.current);
+        } else {
+          secondStr.write(itertor.current);
         }
       }
       if (millsecondStr.isEmpty) {
@@ -260,7 +260,7 @@ class LyricsParser {
       final millsecond = double.tryParse(millsecondStr.toString());
       if (second != null && millsecond != null) {
         final startTimeMillSecond = minute * Duration.millisecondsPerMinute +
-            second * Duration.millisecondsPerMinute +
+            second * Duration.millisecondsPerSecond +
             millsecond;
         return BigInt.from(startTimeMillSecond);
       }
