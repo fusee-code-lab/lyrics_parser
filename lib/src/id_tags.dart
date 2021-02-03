@@ -4,28 +4,20 @@ import 'dart:convert';
 enum LcrIDTag {
   ///  Lyrics artist
   ar,
-
   ///  Album where the song is from
   al,
-
   ///  Lyrics (song) title
   ti,
-
   ///  Creator of the Songtext
   au,
-
   ///  How long the song is
   length,
-
   ///  Creator of the LRC file
   by,
-
   ///  +/- Overall timestamp adjustment in milliseconds, + shifts time up, - shifts down
   offset,
-
   /// The player or editor that created the LRC file
   re,
-
   ///  version of program
   ve,
 }

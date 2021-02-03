@@ -123,12 +123,13 @@ class LyricsParser {
     return _parsePairs(pairs);
   }
 
-  LrcTagContentPair _parseToPair(
-      {required String tagRaw,
-      required String tagKey,
-      required String tagValue,
-      required String content,
-      required String lyricRaw}) {
+  LrcTagContentPair _parseToPair({
+    required String tagRaw,
+    required String tagKey,
+    required String tagValue,
+    required String content,
+    required String lyricRaw
+  }) {
     var type = LcrLyricTagType.unkown;
 
     if (tagKey == '' && tagValue == '') {
@@ -141,8 +142,7 @@ class LyricsParser {
       }
     }
 
-    final lyricStart =
-        _parseLyricStartTime(tagKey, tagValue, tagRaw, content, lyricRaw);
+    final lyricStart = _parseLyricStartTime(tagKey, tagValue, tagRaw, content, lyricRaw);
     if (lyricStart != null) {
       type = LcrLyricTagType.time;
     }
