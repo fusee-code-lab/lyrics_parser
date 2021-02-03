@@ -64,7 +64,7 @@ class LcrLyrics {
   /// version of program
   final String? programVersion;
   /// List of formal part of the lyrics 
-  final List<LcrLyric> lircList;
+  final List<LcrLyric> lyricList;
 
   LcrLyrics({
     this.artist,
@@ -76,7 +76,7 @@ class LcrLyrics {
     this.millsecondOffset = 0,
     this.program,
     this.programVersion,
-    required this.lircList,
+    required this.lyricList,
   });
 }
 

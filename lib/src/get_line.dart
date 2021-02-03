@@ -7,6 +7,7 @@ extension StringLines on Characters {
     bool containsEmptyLine = false, 
     bool trim = true
   }) {
+    // TODO 优化这里， 直接从 string 获取而不是 character，似乎多执行了没必要多操作
     return Stream.fromIterable(this).transform(LineSplitter()).where((line) {
       if (!containsEmptyLine) {
         return line != '';

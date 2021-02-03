@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:lyrics_parser/src/exceptions.dart';
 import 'package:lyrics_parser/src/id_tags.dart';
 import 'package:lyrics_parser/src/models.dart';
 import 'package:path/path.dart' as path;
@@ -8,26 +9,29 @@ import 'package:lyrics_parser/src/get_line.dart';
 
 /// A parser to handle .lrc file or LRC format string.
 class LyricsParser {
-  static final String supportedExtension = 'lcr';
+  static final String supportedExtension = '.lcr';
 
-  late final String _rawString;
-  late Completer<void> _isReadyCompleter;
+  late final String rawString;
+  Completer<void>? _isReadyCompleter;
 
   bool __isReady = false;
   bool get _isReady => __isReady;
   set _isReady(bool value) {
     __isReady = value;
-    _isReadyCompleter.complete();
+    _isReadyCompleter?.complete();
   }
 
-  LyricsParser(this._rawString);
+  LyricsParser(this.rawString) {
+    __isReady = true;
+  }
 
   LyricsParser.fromFile(File file) {
     final extensionName = path.extension(file.path);
+    // TODO using throw
     assert(extensionName == supportedExtension,
         'Unspoort file extension. lyrics_parser needs a .lcr file.');
     file.readAsString().then((value) {
-      _rawString = value;
+      rawString = value;
       _isReady = true;
     });
   }
@@ -56,8 +60,14 @@ class LyricsParser {
   /// For high fault tolerance, if characters that do not meet 
   /// expectations will be ignored or the relevant value will be 
   /// set to the default value.
+  /// 
+  /// May throw [LyricsParserNotReadyException] when call [parse] 
+  /// before [ready].
   Future<LcrLyrics> parse() async {
-    final pairsFuture = _rawString.characters
+    if (!_isReady) {
+      throw LyricsParserNotReadyException('Unready when parse. You need call ready before parse when read from lrc file');
+    }
+    final pairsFuture = rawString.characters
         .getLines(containsEmptyLine: false, trim: false)
         .map((line) {
           Iterator<String> it = line.iterator;
@@ -72,6 +82,9 @@ class LyricsParser {
           final content = StringBuffer();
 
           void release() {
+            if (lyricRaw.isEmpty) {
+              return;
+            }
             results.add(_parseToPair(
               tagRaw: tagRaw.toString(),
               tagKey: tagKey.toString(),
@@ -104,8 +117,10 @@ class LyricsParser {
             } else {
               if (isInTag && isInTagKey) {
                 tagKey.write(it.current);
+                tagRaw.write(it.current);
               } else if (isInTag) {
                 tagValue.write(it.current);
+                tagRaw.write(it.current);
               } else {
                 content.write(it.current);
               }
@@ -182,32 +197,32 @@ class LyricsParser {
         case LcrLyricTagType.id:
           switch (item.tag.key) {
             case 'ar':
-              aritst = item.content;
+              aritst = item.tag.value;
               break;
             case 'al':
-              album = item.content;
+              album = item.tag.value;
               break;
             case 'ti':
-              titile = item.content;
+              titile = item.tag.value;
               break;
             case 'au':
-              songtextCreator = item.content;
+              songtextCreator = item.tag.value;
               break;
             case 'length':
               millSecondLength =
-                  BigInt.tryParse(item.content) ?? BigInt.from(0);
+                  BigInt.tryParse(item.tag.value) ?? BigInt.from(0);
               break;
             case 'by':
-              lcrCreator = item.content;
+              lcrCreator = item.tag.value;
               break;
             case 'offset':
-              millsecondOffset = int.tryParse(item.content) ?? 0;
+              millsecondOffset = int.tryParse(item.tag.value) ?? 0;
               break;
             case 're':
-              program = item.content;
+              program = item.tag.value;
               break;
             case 've':
-              programVersion = item.content;
+              programVersion = item.tag.value;
               break;
           }
           break;
@@ -215,6 +230,7 @@ class LyricsParser {
           // Do notion
           break;
         case LcrLyricTagType.comment:
+          // TODO append comment line
           // Do notiong
           break;
       }
@@ -229,7 +245,7 @@ class LyricsParser {
       millsecondOffset: millsecondOffset,
       program: program,
       programVersion: programVersion,
-      lircList: lyrics,
+      lyricList: lyrics,
     );
   }
 
