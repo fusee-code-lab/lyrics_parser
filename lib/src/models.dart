@@ -21,7 +21,7 @@ class LrcTagContentPair {
 ///
 /// Some tags are defined:
 ///   see [LcrIDTag]
-///   mm:ss or mm:ss.millsecond: Lyric start tiem
+///   mm:ss or mm:ss.millisecond: Lyric start tiem
 ///   [:]: Comment line: Comment symbol, ignore the content after the symbol in this line 
 /// 
 /// [LcrTag] support undefined tag for backward compatible.
@@ -31,14 +31,14 @@ class LcrTag {
   final String value;
   final String raw;
   final LcrLyricTagType type;
-  final BigInt? startTimeMillSecond;
+  final BigInt? startTimeMilliSecond;
 
   LcrTag({
     required this.key, 
     required this.value, 
     required this.raw, 
     required this.type,
-    this.startTimeMillSecond
+    this.startTimeMilliSecond
   });
 }
 
@@ -54,11 +54,11 @@ class LcrLyrics {
   ///  Creator of the Songtext
   final String? songtextCreator;
   ///  How long the song is
-  final BigInt? millSecondLength;
+  final BigInt? millisecondLength;
   ///  Creator of the LRC file
   final String? lcrCreator;
   ///  +/- Overall timestamp adjustment in milliseconds, + shifts time up, - shifts down
-  final int millsecondOffset;
+  final int millisecondOffset;
   /// The player or editor that created the LRC file
   final String? program;
   /// version of program
@@ -71,9 +71,9 @@ class LcrLyrics {
     this.album,
     this.title,
     this.songtextCreator,
-    this.millSecondLength,
+    this.millisecondLength,
     this.lcrCreator,
-    this.millsecondOffset = 0,
+    this.millisecondOffset = 0,
     this.program,
     this.programVersion,
     required this.lyricList,
@@ -82,12 +82,12 @@ class LcrLyrics {
 
 /// Lcr file's or format's each lyric's model.
 class LcrLyric {
-  final BigInt? startTimeMillSecond;
-  final String contennt;
+  final BigInt? startTimeMillisecond;
+  final String content;
 
   LcrLyric({
-    this.startTimeMillSecond,
-    required this.contennt,
+    this.startTimeMillisecond,
+    required this.content,
   });
 }
 

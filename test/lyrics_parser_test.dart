@@ -45,14 +45,14 @@ void main() {
         final content = '[length:$length]';
         final parser = LyricsParser(content);
         final res = await parser.parse();
-        expect(res.millSecondLength, BigInt.from(length));
+        expect(res.millisecondLength, BigInt.from(length));
       });
       test('Parse lcr format ID tag correctly (int value)', () async {
         final offset = -5;
         final content = '[offset:$offset]';
         final parser = LyricsParser(content);
         final res = await parser.parse();
-        expect(res.millsecondOffset, offset);
+        expect(res.millisecondOffset, offset);
       });
 
       test('Parse time tag correctly (mm:ss)', () async {
@@ -61,13 +61,13 @@ void main() {
         final parser = LyricsParser(content);
         final res = await parser.parse();
         expect(
-          res.lyricList.first.startTimeMillSecond, 
+          res.lyricList.first.startTimeMillisecond, 
           BigInt.from(
             minute * Duration.millisecondsPerMinute + 
               second * Duration.millisecondsPerSecond
           )
         );
-        expect(res.lyricList.first.contennt, lyric);
+        expect(res.lyricList.first.content, lyric);
       });
       test('Parse time tag correctly (mm:ss.ff)', () async {
         final minute = 1, second = 23, mill = 12, lyric = 'Hasss';
@@ -75,13 +75,13 @@ void main() {
         final parser = LyricsParser(content);
         final res = await parser.parse();
         expect(
-          res.lyricList.first.startTimeMillSecond, 
+          res.lyricList.first.startTimeMillisecond, 
           BigInt.from(
             minute * Duration.millisecondsPerMinute + 
             second * Duration.millisecondsPerSecond + mill
           )
         );
-        expect(res.lyricList.first.contennt, lyric);
+        expect(res.lyricList.first.content, lyric);
       });
 
       test('Should ignore the content after comment symbol([:]) in this line', () async {

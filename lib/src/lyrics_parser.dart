@@ -167,7 +167,7 @@ class LyricsParser {
       value: tagValue,
       raw: tagRaw,
       type: type,
-      startTimeMillSecond: lyricStart,
+      startTimeMilliSecond: lyricStart,
     );
     return LrcTagContentPair(tag: tag, content: content, raw: lyricRaw);
   }
@@ -180,8 +180,8 @@ class LyricsParser {
         lcrCreator,
         program,
         programVersion;
-    var millSecondLength = BigInt.from(0);
-    var millsecondOffset = 0;
+    var millisecondLength = BigInt.from(0);
+    var millisecondOffset = 0;
     final lyrics = <LcrLyric>[];
 
     for (final item in pairs) {
@@ -189,8 +189,8 @@ class LyricsParser {
       switch (item.tag.type) {
         case LcrLyricTagType.time:
           final lyric = LcrLyric(
-            contennt: item.content, 
-            startTimeMillSecond: item.tag.startTimeMillSecond
+            content: item.content, 
+            startTimeMillisecond: item.tag.startTimeMilliSecond
           );
           lyrics.add(lyric);
           break;
@@ -209,14 +209,14 @@ class LyricsParser {
               songtextCreator = item.tag.value;
               break;
             case 'length':
-              millSecondLength =
+              millisecondLength =
                   BigInt.tryParse(item.tag.value) ?? BigInt.from(0);
               break;
             case 'by':
               lcrCreator = item.tag.value;
               break;
             case 'offset':
-              millsecondOffset = int.tryParse(item.tag.value) ?? 0;
+              millisecondOffset = int.tryParse(item.tag.value) ?? 0;
               break;
             case 're':
               program = item.tag.value;
@@ -228,6 +228,7 @@ class LyricsParser {
           break;
         case LcrLyricTagType.unkown:
           // Do notion
+          // TODO 支持，有些歌词没有标签
           break;
         case LcrLyricTagType.comment:
           // TODO append comment line
@@ -240,9 +241,9 @@ class LyricsParser {
       album: album,
       title: titile,
       songtextCreator: songtextCreator,
-      millSecondLength: millSecondLength,
+      millisecondLength: millisecondLength,
       lcrCreator: lcrCreator,
-      millsecondOffset: millsecondOffset,
+      millisecondOffset: millisecondOffset,
       program: program,
       programVersion: programVersion,
       lyricList: lyrics,
@@ -255,30 +256,30 @@ class LyricsParser {
     final minute = double.tryParse(tagKey);
     if (minute != null) {
       final secondStr = StringBuffer();
-      final millsecondStr = StringBuffer();
-      var inMillsecond = false;
+      final millisecondStr = StringBuffer();
+      var inMillisecond = false;
       final itertor = tagValue.characters.iterator;
       while (itertor.moveNext()) {
         if (itertor.current == '.') {
-          inMillsecond = true;
+          inMillisecond = true;
           continue;
         }
-        if (inMillsecond) {
-          millsecondStr.write(itertor.current);
+        if (inMillisecond) {
+          millisecondStr.write(itertor.current);
         } else {
           secondStr.write(itertor.current);
         }
       }
-      if (millsecondStr.isEmpty) {
-        millsecondStr.write('0');
+      if (millisecondStr.isEmpty) {
+        millisecondStr.write('0');
       }
       final second = double.tryParse(secondStr.toString());
-      final millsecond = double.tryParse(millsecondStr.toString());
-      if (second != null && millsecond != null) {
-        final startTimeMillSecond = minute * Duration.millisecondsPerMinute +
+      final millisecond = double.tryParse(millisecondStr.toString());
+      if (second != null && millisecond != null) {
+        final startTimeMillisecond = minute * Duration.millisecondsPerMinute +
             second * Duration.millisecondsPerSecond +
-            millsecond;
-        return BigInt.from(startTimeMillSecond);
+            millisecond;
+        return BigInt.from(startTimeMillisecond);
       }
     }
     return null;

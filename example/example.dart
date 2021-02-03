@@ -8,6 +8,6 @@ void main(List<String> args) async {
   await parser.ready();
   final result = await parser.parse();
   for (final lyric in result.lyricList) {
-    print('${lyric.startTimeMillSecond}: ${lyric.contennt}');
+    print('${lyric.startTimeMillisecond}: ${lyric.content}');
   }
 }

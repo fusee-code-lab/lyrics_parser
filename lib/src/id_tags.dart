@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 /// All Lcr file or format defined id tag
 enum LcrIDTag {
   ///  Lyrics artist
