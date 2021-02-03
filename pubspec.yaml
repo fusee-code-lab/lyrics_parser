@@ -1,7 +1,8 @@
 name: lyrics_parser
-description: A starting point for Dart libraries or applications.
-# version: 1.0.0
-# homepage: https://www.example.com
+description: >-
+  .lrc file parser and lyrics tracker.
+version: 1.0.0-nullsafety
+homepage: https://github.com/fusee-code-lab/lyrics_parser
 
 environment:
   sdk: '>=2.12.0-0 <3.0.0'
