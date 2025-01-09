@@ -3,5 +3,5 @@ class LyricsParserNotReadyException implements Exception {
   const LyricsParserNotReadyException(this.message);
 
   @override
-  String toString() => super.toString() + ': ' + message;
+  String toString() => '${super.toString()}: $message';
 }
